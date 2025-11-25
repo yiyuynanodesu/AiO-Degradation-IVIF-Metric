@@ -29,6 +29,20 @@ or
 python metric_template.py
 ```
 
+## Warning List
+### SPGFusion
+if you use SPGFusion, add this to eval_metric:
+```python
+w_vi, h_vi = image_vis.size  # (width, height)
+w_ir, h_ir = image_ir.size
+new_w = max(16, (w_vi // 16) * 16)
+new_h = max(16, (h_vi // 16) * 16)
+if (w_vi != new_w) or (h_vi != new_h):
+    image_vis = image_vis.resize((new_w, new_h), resample=Image.BICUBIC)
+if (w_ir != new_w) or (h_ir != new_h):
+    image_ir = image_ir.resize((new_w, new_h), resample=Image.BICUBIC)
+```
+
 ## Acknowledgement
 
 Our code is based on the following 
