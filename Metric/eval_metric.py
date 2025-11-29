@@ -34,6 +34,15 @@ def evaluation_one(ir_name, vi_name, f_name):
     ir_img = Image.open(ir_name).convert('L')
     vi_img = Image.open(vi_name).convert('L')
 
+    w_vi, h_vi = vi_img.size  # (width, height)
+    w_ir, h_ir = ir_img.size
+    new_w = max(16, (w_vi // 16) * 16)
+    new_h = max(16, (h_vi // 16) * 16)
+    if (w_vi != new_w) or (h_vi != new_h):
+        vi_img = vi_img.resize((new_w, new_h), resample=Image.BICUBIC)
+    if (w_ir != new_w) or (h_ir != new_h):
+        ir_img = ir_img.resize((new_w, new_h), resample=Image.BICUBIC)
+
     f_img_tensor = torch.tensor(np.array(f_img)).float().to(device)
     ir_img_tensor = torch.tensor(np.array(ir_img)).float().to(device)
     vi_img_tensor = torch.tensor(np.array(vi_img)).float().to(device)
@@ -102,42 +111,39 @@ def eval_batch(ir_path, vis_path, output_path, save_dir):
         SSIM_list = []
         MS_SSIM_list = []
         filename_list = ['']
-        fileList = os.listdir(ir_path)
-        eval_bar = tqdm(fileList)
-        for _, filename in enumerate(eval_bar):
-            ir_name = os.path.join(ir_path, filename)
-            vi_name = os.path.join(vis_path, filename)
-            f_name = os.path.join(output_path, filename)
-
-            if os.path.exists(f_name):
-                try:
-                    CE, NMI, QNCIE, TE, EI, Qy, Qcb, EN, MI, SF, AG, SD, CC, SCD, VIF, MSE, PSNR, Qabf, Nabf, SSIM, MS_SSIM = evaluation_one(ir_name, vi_name, f_name)
-                except:
-                    print('cal error!!! please stop me!!!')
-                    continue
-                CE_list.append(CE)
-                NMI_list.append(NMI)
-                QNCIE_list.append(QNCIE)
-                TE_list.append(TE)
-                EI_list.append(EI)
-                Qy_list.append(Qy)
-                Qcb_list.append(Qcb)
-                EN_list.append(EN)
-                MI_list.append(MI)
-                SF_list.append(SF)
-                AG_list.append(AG)
-                SD_list.append(SD)
-                CC_list.append(CC)
-                SCD_list.append(SCD)
-                VIF_list.append(VIF)
-                MSE_list.append(MSE)
-                PSNR_list.append(PSNR)
-                Qabf_list.append(Qabf)
-                Nabf_list.append(Nabf)
-                SSIM_list.append(SSIM)
-                MS_SSIM_list.append(MS_SSIM)
-                filename_list.append(filename)
-                eval_bar.set_description("{} | {}".format(Method, filename))
+        ir_fileList = os.listdir(ir_path)
+        vi_fileList = os.listdir(vis_path)
+        output_fileList = os.listdir(output_path)
+        eval_bar = tqdm(zip(ir_fileList, vi_fileList, output_fileList))
+        for _, (ir_filename, vi_filename, output_filename) in enumerate(eval_bar):
+            ir_name = os.path.join(ir_path, ir_filename)
+            vi_name = os.path.join(vis_path, vi_filename)
+            f_name = os.path.join(output_path, output_filename)
+            
+            CE, NMI, QNCIE, TE, EI, Qy, Qcb, EN, MI, SF, AG, SD, CC, SCD, VIF, MSE, PSNR, Qabf, Nabf, SSIM, MS_SSIM = evaluation_one(ir_name, vi_name, f_name)
+            CE_list.append(CE)
+            NMI_list.append(NMI)
+            QNCIE_list.append(QNCIE)
+            TE_list.append(TE)
+            EI_list.append(EI)
+            Qy_list.append(Qy)
+            Qcb_list.append(Qcb)
+            EN_list.append(EN)
+            MI_list.append(MI)
+            SF_list.append(SF)
+            AG_list.append(AG)
+            SD_list.append(SD)
+            CC_list.append(CC)
+            SCD_list.append(SCD)
+            VIF_list.append(VIF)
+            MSE_list.append(MSE)
+            PSNR_list.append(PSNR)
+            Qabf_list.append(Qabf)
+            Nabf_list.append(Nabf)
+            SSIM_list.append(SSIM)
+            MS_SSIM_list.append(MS_SSIM)
+            filename_list.append(ir_filename)
+            eval_bar.set_description("{} | {}".format(Method, ir_filename))
 
         CE_tensor = torch.tensor(CE_list).mean().item()
         CE_list.append(CE_tensor)
