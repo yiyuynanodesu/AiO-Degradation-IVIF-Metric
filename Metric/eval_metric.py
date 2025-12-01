@@ -34,14 +34,14 @@ def evaluation_one(ir_name, vi_name, f_name):
     ir_img = Image.open(ir_name).convert('L')
     vi_img = Image.open(vi_name).convert('L')
 
-    w_vi, h_vi = vi_img.size  # (width, height)
-    w_ir, h_ir = ir_img.size
-    new_w = max(16, (w_vi // 16) * 16)
-    new_h = max(16, (h_vi // 16) * 16)
-    if (w_vi != new_w) or (h_vi != new_h):
-        vi_img = vi_img.resize((new_w, new_h), resample=Image.BICUBIC)
-    if (w_ir != new_w) or (h_ir != new_h):
-        ir_img = ir_img.resize((new_w, new_h), resample=Image.BICUBIC)
+    # w_vi, h_vi = vi_img.size  # (width, height)
+    # w_ir, h_ir = ir_img.size
+    # new_w = max(16, (w_vi // 16) * 16)
+    # new_h = max(16, (h_vi // 16) * 16)
+    # if (w_vi != new_w) or (h_vi != new_h):
+    #     vi_img = vi_img.resize((new_w, new_h), resample=Image.BICUBIC)
+    # if (w_ir != new_w) or (h_ir != new_h):
+    #     ir_img = ir_img.resize((new_w, new_h), resample=Image.BICUBIC)
 
     f_img_tensor = torch.tensor(np.array(f_img)).float().to(device)
     ir_img_tensor = torch.tensor(np.array(ir_img)).float().to(device)
