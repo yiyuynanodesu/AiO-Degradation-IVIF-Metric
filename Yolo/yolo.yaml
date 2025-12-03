@@ -1,0 +1,9 @@
+path: ./dataset/MSRS/detection
+train: 
+val: images
+test:
+
+names: 
+    0 person
+    1 bicycle
+    2 car
