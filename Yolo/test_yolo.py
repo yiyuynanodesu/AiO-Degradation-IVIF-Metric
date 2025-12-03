@@ -30,12 +30,12 @@ def write_excel(excel_name='detection.xlsx', worksheet_name='VIF', column_index=
 Method = 'model'
 model = YOLO("yolov8n.pt")
 
-metrics = model.val(data="yolo.yaml",save_txt=True)
+metrics = model.val(data="yolo.yaml",save_text=True)
 
 P, R, mAP50, mAP5095 = metrics.results_dict['metrics/precision(B)'], metrics.results_dict['metrics/recall(B)'], metrics.results_dict['metrics/mAP50(B)'], metrics.results_dict['metrics/mAP50-95(B)']
 mAP75 = metrics.box.map75
 
-print(P, R, mAP50, mAP75, mAP5095)
+print(f'P : {P} , R: {R} , mAP50: {mAP50}, mAP75: {mAP75}, mAP5095: {mAP5090}')
 
 metric_list = ['Model','P','R','mAP50','mAP75','mAP5095']
 value_list = [Method, P, R, mAP50, mAP75, mAP5095]
