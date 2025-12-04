@@ -1,4 +1,5 @@
-path: ./dataset/MSRS/detection
+# path: ./dataset/MSRS/detection
+# path: ./dataset/LLVIP
 train: 
 val: images
 test:
