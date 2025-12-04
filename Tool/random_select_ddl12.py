@@ -17,12 +17,12 @@ os.makedirs(target_dataset_path, exist_ok=True)
 def move_single():
     dataset_path = './dataset/DDL-12/Single'
     '''
-    对于单个退化 从每个程度的训练集中选250张 测试集选45张 这样单个退化有1000张训练数据 180张测试数据
+    对于单个退化 从每个程度的训练集中选100张 测试集选25张 这样单个退化有400张训练数据 100张测试数据
     '''
     
     select_num = {
-        'train': 250,  # 训练集选择250张
-        'test': 45     # 测试集选择45张
+        'train': 100,  # 训练集选择250张
+        'test': 25     # 测试集选择45张
     }
     
     # 遍历每种退化类型
@@ -87,8 +87,14 @@ def move_single():
 def move_multi():
     dataset_path = './dataset/DDL-12/Multi'
     '''
-    对于复合退化 考虑到单个退化训练大概1000张 训练大概180张 因此直接将复合退化的全部图像移动到新文件中
+    对于复合退化 从单个复合退化训练集中随机选择400张 测试集中随机选择80张
     '''
+
+    select_num = {
+        'train': 400,  # 训练集选择400张
+        'test': 80     # 测试集选择80张
+    }
+    
     for dtype in os.listdir(dataset_path):
 
         dataset_dtype = os.path.join(dataset_path, dtype)
@@ -97,12 +103,29 @@ def move_multi():
             dataset_dtype_phrase = os.path.join(dataset_dtype, phrase)
             target_phrase = os.path.join(target_dataset_path, phrase)
 
+            num_to_select = select_num.get(phrase, 0)
+            if num_to_select == 0:
+                continue
+
+            selected_indices = []
             for image_type in os.listdir(dataset_dtype_phrase):
                 dataset_dtype_phrase_image_type = os.path.join(dataset_dtype_phrase, image_type)
                 target_phrase_image_type = os.path.join(target_phrase, image_type)
+                fileList = os.listdir(dataset_dtype_phrase_image_type)
+
+                # 检查是否有足够图片可供选择
+                if len(fileList) < num_to_select:
+                    print(f'Warning: Not enough images in {dataset_dtype_degree_phrase_image_type}. '
+                          f'Only {len(fileList)} available, need {num_to_select}.')
+                    num_to_select = len(fileList)
+                
+                # 随机选择指定数量的图片
+                if len(selected_indices) == 0:
+                    selected_indices = random.sample(range(len(fileList)), num_to_select)
 
                 copied_count = 0
-                for file in os.listdir(dataset_dtype_phrase_image_type):
+                for index in selected_indices:
+                    file = fileList[index]
                     filename = file.split('.')[0]
                     compose_dtype = dtype.split('_')[1] + '_' + dtype.split('_')[2]
                     new_filename = filename + '_' + compose_dtype + '.' + save_ext
@@ -119,5 +142,5 @@ def move_multi():
                 print(f'  Selected and copied {copied_count} images to {target_phrase_image_type}')
 
 if __name__ == '__main__':
-    # move_single()
-    # move_multi()
+    move_single()
+    move_multi()
