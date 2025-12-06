@@ -3,6 +3,10 @@ import os
 import glob
 import numpy as np
 
+"""
+合并excel文件 用于定量分析
+"""
+
 def merge_excel_files_advanced(input_folder=None, file_pattern="*.xlsx", output_file="合并结果.xlsx"):
     """
     高级版本：支持文件夹扫描和更多选项
