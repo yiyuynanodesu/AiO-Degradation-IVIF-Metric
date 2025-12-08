@@ -10,15 +10,15 @@ vis_path = ''
 output_path = f'./{model}/'
 save_dir = ''
 
-normal_eval(ir_path, vis_path, output_path, save_dir, model_name=model, excel_filename=f'metric_{model}_normal.xlsx')
+normal_eval(ir_path, vis_path, output_path, save_dir, model_name=model, excel_filename=f'{model}_normal.xlsx')
 
 # Degrad IVIF
 
 output_path = ''
 save_dir = ''
-degrad_eval(output_path, save_dir, model_name=model, excel_filename=f'metric_{model}_degrad.xlsx')
+degrad_eval(output_path, save_dir, model_name=model, excel_filename=f'{model}_degrad.xlsx')
 
 # Degrad Type IVIF
 output_path = ''
 save_dir = ''
-degrad_type_eval(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'metric_{model}_detail.xlsx')
+degrad_type_eval(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'{model}_detail.xlsx')
