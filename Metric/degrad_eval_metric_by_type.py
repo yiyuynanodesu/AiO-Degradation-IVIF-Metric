@@ -88,7 +88,6 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
 
             if degard_type == None:
                 print(f'!!! pay attention {f_name} can not classify!!!')
-            print(f'{output_filename} {degard_type}')
             EI, EN, SF, SD, AG = evaluation_one(f_name)
             EI_list[degard_type].append(EI)
             EN_list[degard_type].append(EN)
