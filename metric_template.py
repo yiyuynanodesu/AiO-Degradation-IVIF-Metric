@@ -1,8 +1,16 @@
-from Metric.eval_metric import eval_batch
+from Metric.eval_metric import eval_batch as normal_eval
+from Metric.degrad_eval_metric import eval_bath as degrad_eval
 
-ir_path = './dataset/MSRS/test/ir'
-vis_path = './dataset/MSRS/test/vi'
-output_path = './SPGFusion/OUTPUT/Time_test3/'
-save_dir = './'
+# Normal IVIF
+ir_path = ''
+vis_path = ''
+output_path = ''
+save_dir = ''
 
-eval_batch(ir_path, vis_path, output_path, save_dir)
+normal_eval(ir_path, vis_path, output_path, save_dir, model_name='Model', excel_filename='metric.xlsx')
+
+# Degrad IVIF
+
+output_path = ''
+save_dir = ''
+degrad_eval(output_path, save_dir, model_name='Model', excel_filename='metric.xlsx')

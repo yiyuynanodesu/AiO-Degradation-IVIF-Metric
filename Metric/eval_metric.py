@@ -81,11 +81,11 @@ def evaluation_one(ir_name, vi_name, f_name):
 
     return CE, NMI, QNCIE, TE, EI, Qy, Qcb, EN, MI, SF, AG, SD, CC, SCD, VIF, MSE, PSNR, Qabf, Nabf, SSIM, MS_SSIM
 
-def eval_batch(ir_path, vis_path, output_path, save_dir):
+def eval_batch(ir_path, vis_path, output_path, save_dir, model_name='Model', excel_filename='metric.xlsx'):
     Method_list = [
-        'Model',
+        model_name
     ]
-    metric_save_name = os.path.join(save_dir, f'metric.xlsx')
+    metric_save_name = os.path.join(save_dir, excel_filename)
     # Starting index for the method 'BDLFusion'
     start_index = Method_list.index('Model')
     for i, Method in enumerate(Method_list[start_index:], start=start_index):
