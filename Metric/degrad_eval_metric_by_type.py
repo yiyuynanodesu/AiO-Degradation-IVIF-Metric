@@ -75,20 +75,20 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
 
             if "Rain" in output_filename and "Haze" in output_filename:
                 degard_type = 0
-            if "Low" in output_filename and "Haze" in output_filename:
+            elif "Low" in output_filename and "Haze" in output_filename:
                 degard_type = 1
-            if "Rain" in output_filename:
+            elif "Rain" in output_filename:
                 degard_type = 2
-            if "Haze" in output_filename:
+            elif "Haze" in output_filename:
                 degard_type = 3
-            if "exposure" in output_filename:
+            elif "exposure" in output_filename:
                 degard_type = 4
-            if "light" in output_filename:
+            elif "light" in output_filename:
                 degard_type = 5
 
             if degard_type == None:
                 print(f'!!! pay attention {f_name} can not classify!!!')
-            
+            print(f'{output_filename} {degard_type}')
             EI, EN, SF, SD, AG = evaluation_one(f_name)
             EI_list[degard_type].append(EI)
             EN_list[degard_type].append(EN)
@@ -111,19 +111,23 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
             SD_list[idx].append(SD_tensor)
             filename_list[idx].append('mean')
 
+            filename_list[idx].insert(0, '')
+            EI_list[idx].insert(0, 'EI')
+            EN_list[idx].insert(0, 'EN')
+            SF_list[idx].insert(0, 'SF')
+            AG_list[idx].insert(0, 'AG')
+            SD_list[idx].insert(0, 'SD')
 
-            EI_list[idx].insert(0, '{}'.format(Method))
-            EN_list[idx].insert(0, '{}'.format(Method))
-            SF_list[idx].insert(0, '{}'.format(Method))
-            AG_list[idx].insert(0, '{}'.format(Method))
-            SD_list[idx].insert(0, '{}'.format(Method))
-
-        if i == start_index:
-            for idx in degard_list:
-                write_excel(metric_save_name, degard_list[idx], 0, filename_list[idx])
-                write_excel(metric_save_name, degard_list[idx], 1, EI_list[idx])
-                write_excel(metric_save_name, degard_list[idx], 2, EN_list[idx])
-                write_excel(metric_save_name, degard_list[idx], 3, SF_list[idx])
-                write_excel(metric_save_name, degard_list[idx], 4, AG_list[idx])
-                write_excel(metric_save_name, degard_list[idx], 5, SD_list[idx])
+        for idx in range(len(degard_list)):
+            write_excel(metric_save_name, degard_list[idx], 0, filename_list[idx])
+            write_excel(metric_save_name, degard_list[idx], 1, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+                 in EI_list[idx]])
+            write_excel(metric_save_name, degard_list[idx], 2, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+                 in EN_list[idx]])
+            write_excel(metric_save_name, degard_list[idx], 3, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+                 in SF_list[idx]])
+            write_excel(metric_save_name, degard_list[idx], 4, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+                 in AG_list[idx]])
+            write_excel(metric_save_name, degard_list[idx], 5, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+                 in SD_list[idx]])
         print('Done')
