@@ -34,7 +34,7 @@ for image_type in os.listdir(dataset_path):
     os.makedirs(light_path, exist_ok=True)
     exposure_path = os.path.join(target_image_type, "Exposure")
     os.makedirs(exposure_path, exist_ok=True)
-    haze_light_path = os.path.join(target_image_type, "HazeLowLgiht")
+    haze_light_path = os.path.join(target_image_type, "HazeLowLight")
     os.makedirs(haze_light_path, exist_ok=True)
     haze_rain_path = os.path.join(target_image_type, "HazeRain")
     os.makedirs(haze_rain_path, exist_ok=True)
