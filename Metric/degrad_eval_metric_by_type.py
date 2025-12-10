@@ -73,18 +73,31 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
             # 0--HazeRain 1--HazeLow 2--Rain 3--Haze 4--Exposure 5--Light
             degard_type = None
 
-            if "Rain" in output_filename and "Haze" in output_filename:
-                degard_type = 0
-            elif "Low" in output_filename and "Haze" in output_filename:
-                degard_type = 1
-            elif "Rain" in output_filename:
-                degard_type = 2
-            elif "Haze" in output_filename:
-                degard_type = 3
-            elif "exposure" in output_filename:
-                degard_type = 4
-            elif "light" in output_filename:
-                degard_type = 5
+            # DDL
+            if len(degard_list) == 6:
+                if "Rain" in output_filename and "Haze" in output_filename:
+                    degard_type = 0
+                elif "Low" in output_filename and "Haze" in output_filename:
+                    degard_type = 1
+                elif "Rain" in output_filename:
+                    degard_type = 2
+                elif "Haze" in output_filename:
+                    degard_type = 3
+                elif "exposure" in output_filename:
+                    degard_type = 4
+                elif "light" in output_filename:
+                    degard_type = 5
+
+            # EMS
+            if len(degard_list) == 4:
+                if "Rain" in output_filename:
+                    degard_type = 0
+                elif "Haze" in output_filename:
+                    degard_type = 1
+                elif "Exposure" in output_filename:
+                    degard_type = 2
+                elif "Light" in output_filename:
+                    degard_type = 3
 
             if degard_type == None:
                 print(f'!!! pay attention {f_name} can not classify!!!')
