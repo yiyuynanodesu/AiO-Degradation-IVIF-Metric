@@ -1,10 +1,10 @@
 ### Dependencies and Installation
 ```
 # Create a conda environment and activate it
-conda create -n clipiqa python=3.8 -y
-conda activate clipiqa
+conda create -n metric python=3.8 -y
+conda activate metric
 # Install PyTorch following official instructions, e.g.
-conda install pytorch=1.10 torchvision cudatoolkit=11.3 -c pytorch
+pip install torch==1.10.0+cu111 torchvision==0.11.0+cu111 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
 # Install pre-built MMCV using MIM.
 pip3 install openmim
 mim install mmcv-full==1.5.0
