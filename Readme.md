@@ -7,6 +7,8 @@
 pip install scipy
 pip install scikit-learn
 pip install openpyxl
+pip install numpy==1.23.5
+pip install Pillow==9.5
 ```
 
 ## Usage
