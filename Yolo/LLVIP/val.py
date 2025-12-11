@@ -3,10 +3,8 @@
 Validate a trained YOLOv5 model accuracy on a custom dataset
 
 Usage:
-    $ python val.py --data LLVIP.yaml --weights yolov5_visible.pt --img 640 --name Model
+    $ python path/to/val.py --data coco128.yaml --weights yolov5s.pt --img 640
 """
-
-# pip install numpy==1.22.4
 
 import argparse
 import json
@@ -18,6 +16,15 @@ from threading import Thread
 import numpy as np
 import torch
 from tqdm import tqdm
+
+import numpy as np
+from PIL import Image
+from tqdm import tqdm
+import os
+import torch
+import warnings
+from openpyxl import Workbook, load_workbook
+from openpyxl.utils import get_column_letter
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -34,6 +41,25 @@ from utils.metrics import ap_per_class, ConfusionMatrix
 from utils.plots import output_to_target, plot_images, plot_val_study
 from utils.torch_utils import select_device, time_sync
 from utils.callbacks import Callbacks
+
+warnings.filterwarnings("ignore")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+def write_excel(excel_name='detection.xlsx', worksheet_name='VIF', column_index=0, data=None):
+    try:
+        workbook = load_workbook(excel_name)
+    except FileNotFoundError:
+        workbook = Workbook()
+
+    worksheet = workbook.create_sheet(title=worksheet_name) if worksheet_name not in workbook.sheetnames else workbook[
+        worksheet_name]
+
+    column = get_column_letter(column_index + 1)
+    for i, value in enumerate(data):
+        cell = worksheet[column + str(i + 1)]
+        cell.value = value
+
+    workbook.save(excel_name)
 
 
 def save_one_txt(predn, save_conf, shape, file):
@@ -105,7 +131,7 @@ def run(data,
         model=None,
         dataloader=None,
         save_dir=Path(''),
-        plots=False,
+        plots=True,
         callbacks=Callbacks(),
         compute_loss=None,
         ):
@@ -296,6 +322,13 @@ def run(data,
     maps = np.zeros(nc) + map
     for i, c in enumerate(ap_class):
         maps[c] = ap[i]
+
+    metric_list = ['Model','P','R','mAP50','mAP5095']
+    value_list = [name, mp, mr, map50, map]
+    
+    write_excel(name + '_detection.xlsx', 'Detection', 0, metric_list)
+    write_excel(name + '_detection.xlsx', 'Detection', 1, value_list)
+    
     return (mp, mr, map50, map, *(loss.cpu() / len(dataloader)).tolist()), maps, t
 
 
