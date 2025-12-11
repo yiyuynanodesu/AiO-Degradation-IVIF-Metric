@@ -87,7 +87,7 @@ def eval_batch(ir_path, vis_path, output_path, save_dir, model_name='Model', exc
     ]
     metric_save_name = os.path.join(save_dir, excel_filename)
     # Starting index for the method 'BDLFusion'
-    start_index = Method_list.index('Model')
+    start_index = Method_list.index(model_name)
     for i, Method in enumerate(Method_list[start_index:], start=start_index):
         CE_list = []
         NMI_list = []
