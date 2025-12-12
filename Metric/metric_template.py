@@ -2,27 +2,28 @@ from evaluate.eval_metric import eval_batch as normal_eval
 from evaluate.degrad_eval_metric import eval_batch as degrad_eval
 from evaluate.degrad_eval_metric_by_type import eval_batch as degrad_type_eval
 
-model = 'ControlFusion'
+import os
+import argparse
+
+model = 'UP-Fusion'
+
+parser = argparse.ArgumentParser(description='PyTorch Training Example')
+parser.add_argument('--model', default = '', help='model')
+parser.add_argument('--ir_path', default = '', help='model')
+parser.add_argument('--vi_path', default = '', help='model')
+parser.add_argument('--result_path', default = '', help='result path')
+parser.add_argument('--save_path', default = '', help='model')
+args = parser.parse_args()
 
 # Normal IVIF
-# ir_path = ''
-# vis_path = ''
-# output_path = f'./{model}/'
-# save_dir = ''
-
-# normal_eval(ir_path, vis_path, output_path, save_dir, model_name=model, excel_filename=f'{model}_normal.xlsx')
+# normal_eval(args.ir_path, args.vi_path, args.result_path, args.save_path, model_name=model, excel_filename=f'{model}_normal.xlsx')
 
 # Degrad IVIF
-
 # DDL
-output_path = f'../{model}/LightDDL_Result'
-save_dir = './'
-degrad_eval(output_path, save_dir, model_name=model, excel_filename=f'{model}_degrad.xlsx')
+degrad_eval(args.result_path, args.save_path, model_name=model, excel_filename=f'{model}_degrad.xlsx')
 # Degrad Type IVIF
-degrad_type_eval(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'{model}_detail.xlsx')
+degrad_type_eval(args.result_path, args.save_path, degard_list=['HazeRain','HazeLow','Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'{model}_detail.xlsx')
 
 # EMS
-# output_path = f'./{model}/IRLightEMS_Result'
-# save_dir = './'
-# degrad_eval(output_path, save_dir, model_name=model, excel_filename=f'{model}_degrad.xlsx')
-# degrad_type_eval(output_path, save_dir, degard_list=['Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'{model}_detail.xlsx')
+# degrad_eval(args.result, args.save_path, model_name=model, excel_filename=f'{model}_degrad.xlsx')
+# degrad_type_eval(args.result, args.save_path, degard_list=['Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'{model}_detail.xlsx')
