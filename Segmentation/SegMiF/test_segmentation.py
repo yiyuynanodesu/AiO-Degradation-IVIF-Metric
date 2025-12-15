@@ -29,6 +29,7 @@ from scipy.io import savemat
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 
+# python test_segmentation.py -M "Init_All_wo_image_SPGFusion" -R "../../SPGFusion/FMB_Result/Time_test3" -L "../../dataset/FMB/test/Label"
 def write_excel(excel_name='metric.xlsx', worksheet_name='VIF', column_index=0, data=None):
     try:
         workbook = load_workbook(excel_name)
