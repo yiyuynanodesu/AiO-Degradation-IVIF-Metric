@@ -4,7 +4,7 @@ import glob
 import numpy as np
 
 """
-合并excel文件 用于定量分析
+合并excel文件 可以用于一般IVIF任务和去退化IVIF任务 搭配trans_excel.py一起使用
 """
 
 def merge_excel_files_advanced(input_folder=None, file_pattern="*.xlsx", output_file="合并结果.xlsx"):

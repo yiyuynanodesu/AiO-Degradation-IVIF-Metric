@@ -1,5 +1,9 @@
 import pandas as pd
 
+"""
+读取每个模型每个指标的平均值并排序 搭配merge_excel.py使用
+"""
+
 def process_excel_sheets(input_file, output_file):
     # 读取原始Excel文件
     with pd.ExcelFile(input_file) as xls:

@@ -4,7 +4,7 @@ from evaluate.degrad_eval_metric_by_type import eval_batch as degrad_type_eval
 
 import os
 import argparse
-
+# python metric_template.py --model "Init_All_wo_film_SPGFusion" --dataset "DDL" --result_path "../SPGFusion/OUTPUT/Time_test3"
 parser = argparse.ArgumentParser(description='PyTorch Training Example')
 parser.add_argument('--model', default = '', help='model')
 parser.add_argument('--dataset', default = '', help='dataset')

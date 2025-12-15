@@ -20,30 +20,30 @@ from evaluate.eval_metric import eval_batch as normal_eval
 from evaluate.degrad_eval_metric import eval_batch as degrad_eval
 from evaluate.degrad_eval_metric_by_type import eval_batch as degrad_type_eval
 
-model = ''
-
-# Normal IVIF
-ir_path = ''
-vis_path = ''
-output_path = f'./{model}/'
-save_dir = ''
-
-normal_eval(ir_path, vis_path, output_path, save_dir, model_name=model, excel_filename=f'{model}_normal.xlsx')
+import os
+import argparse
+# python metric_template.py --model "Init_All_wo_film_SPGFusion" --dataset "DDL" --result_path "../SPGFusion/OUTPUT/Time_test3"
+parser = argparse.ArgumentParser(description='PyTorch Training Example')
+parser.add_argument('--model', default = '', help='model')
+parser.add_argument('--dataset', default = '', help='dataset')
+parser.add_argument('--ir_path', default = '', help='ir path')
+parser.add_argument('--vi_path', default = '', help='vi path')
+parser.add_argument('--result_path', default = '', help='result path')
+parser.add_argument('--save_path', default = './', help='model')
+args = parser.parse_args()
 
 # Degrad IVIF
-
-# DDL Dataset
-output_path = f'../{model}/'
-save_dir = './'
-degrad_eval(output_path, save_dir, model_name=model, excel_filename=f'{model}_degrad.xlsx')
-# Degrad Type IVIF
-degrad_type_eval(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'{model}_detail.xlsx')
-
-# EMS Dataset
-output_path = f'./{model}/'
-save_dir = './'
-degrad_eval(output_path, save_dir, model_name=model, excel_filename=f'{model}_degrad.xlsx')
-degrad_type_eval(output_path, save_dir, degard_list=['Rain','Haze','Exposure','Light'], model_name=model, excel_filename=f'{model}_detail.xlsx')
+if args.dataset == 'DDL':
+    # DDL
+    degrad_eval(args.result_path, args.save_path, model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_degrad.xlsx')
+    # Degrad Type IVIF
+    degrad_type_eval(args.result_path, args.save_path, degard_list=['HazeRain','HazeLow','Rain','Haze','Exposure','Light'], model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_detail.xlsx')
+elif args.dataset == 'EMS':
+    degrad_eval(args.result_path, args.save_path, model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_degrad.xlsx')
+    degrad_type_eval(args.result_path, args.save_path, degard_list=['Rain','Haze','Exposure','Light'], model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_detail.xlsx')
+else:
+    # Normal IVIF
+    normal_eval(args.ir_path, args.vi_path, args.result_path, args.save_path, model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_normal.xlsx')
 ```
 
 or
