@@ -32,8 +32,8 @@ class Fusion_dataset(Dataset):
         self.length = len(self.filenames_result)
 
     def __getitem__(self, index):
-  
-        result_path = self.filenames_result[index]
+        result_name = self.filenames_result[index]
+        result_path = self.filepath_result[index]
         label_path = self.filepath_label[index]
         image_result = np.array(Image.open(result_path))
         image_result = (
@@ -44,13 +44,11 @@ class Fusion_dataset(Dataset):
         )
         label = np.array(Image.open(label_path))
         label = np.asarray(Image.fromarray(label), dtype=np.int64)
-        
-        # label = label[h:h + 256, w:w + 256]
-        name = self.filenames_result[index]
+    
         return (
             torch.tensor(image_result),
             torch.tensor(label),
-            name,
+            result_name,
         )
 
     def __len__(self):
