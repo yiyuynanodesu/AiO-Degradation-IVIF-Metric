@@ -10,9 +10,9 @@ itype_dict = {
 }
 
 dtype_video_dict = {
-    'night_rain': ['d'],
-    'fog': ['o'],
-    'day_rain': ['k']
+    'night_rain': ['a'],
+    'fog': ['a'],
+    'day_rain': ['c']
 }
 
 for dtype in os.listdir(from_path):
