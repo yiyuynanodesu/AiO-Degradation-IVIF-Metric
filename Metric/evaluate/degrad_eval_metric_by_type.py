@@ -104,6 +104,15 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
                 elif "Light" in output_filename:
                     degard_type = 3
 
+            # RM3DV
+            if len(degard_list) == 3:
+                if "day_rain" in output_filename:
+                    degard_type = 0
+                elif "fog" in output_filename:
+                    degard_type = 1
+                elif "night_rain" in output_filename:
+                    degard_type = 2
+
             if degard_type == None:
                 print(f'!!! pay attention {f_name} can not classify!!!')
             EI, EN, SF, SD, AG, CLIPIQA = evaluation_one(f_name)

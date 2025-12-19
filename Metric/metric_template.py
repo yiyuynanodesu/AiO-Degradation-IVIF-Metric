@@ -4,7 +4,7 @@ from evaluate.degrad_eval_metric_by_type import eval_batch as degrad_type_eval
 
 import os
 import argparse
-# python metric_template.py --model "Init_All_wo_film_SPGFusion" --dataset "DDL" --result_path "../SPGFusion/OUTPUT/Time_test3"
+
 parser = argparse.ArgumentParser(description='PyTorch Training Example')
 parser.add_argument('--model', default = '', help='model')
 parser.add_argument('--dataset', default = '', help='dataset')
@@ -23,6 +23,9 @@ if args.dataset == 'DDL':
 elif args.dataset == 'EMS':
     degrad_eval(args.result_path, args.save_path, model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_degrad.xlsx')
     degrad_type_eval(args.result_path, args.save_path, degard_list=['Rain','Haze','Exposure','Light'], model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_detail.xlsx')
+elif args.dataset == 'RM3DV':
+    degrad_eval(args.result_path, args.save_path, model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_degrad.xlsx')
+    degrad_type_eval(args.result_path, args.save_path, degard_list=['day_rain','fog','night_rain'], model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_detail.xlsx')
 else:
     # Normal IVIF
     normal_eval(args.ir_path, args.vi_path, args.result_path, args.save_path, model_name=args.model, excel_filename=f'{args.model}_{args.dataset}_normal.xlsx')
