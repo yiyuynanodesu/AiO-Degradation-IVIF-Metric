@@ -74,7 +74,8 @@ start = torch.cuda.Event(enable_timing=True)
 end = torch.cuda.Event(enable_timing=True)
 torch.cuda.synchronize()
 #### model fusion ####
-flops, params = profile(model, inputs=(vi, ir))
+flops, _ = profile(model, inputs=(vi, ir))
+total = sum([params.nelement() for params in model.parameters()])
 #### model fusion ####
 start.record()
 output = model(vi, ir)
@@ -82,7 +83,7 @@ end.record()
 torch.cuda.synchronize()
 elapsed_time = start.elapsed_time(end)
 flops_g = flops / 1e9  # to GFLOPs
-params_m = params / 1e6  # to MParams
+params_m = total / 1e6  # to MParams
 speed_s = elapsed_time / 1000  # to Second
 print(f'GFLOPs: {flops_g:.2f}, MParams: {params_m:.2f}, Speed: {speed_s:.3f}s')
 ```
