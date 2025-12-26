@@ -66,6 +66,27 @@ if (w_ir != new_w) or (h_ir != new_h):
     ir_img = ir_img.resize((new_w, new_h), resample=Image.BICUBIC)
 ```
 
+## Model Flops and Params/Speed
+```python
+# Create ir, vi input tensor
+from thop import profile
+start = torch.cuda.Event(enable_timing=True)
+end = torch.cuda.Event(enable_timing=True)
+torch.cuda.synchronize()
+#### model fusion ####
+flops, params = profile(model, inputs=(vi, ir))
+#### model fusion ####
+start.record()
+output = model(vi, ir)
+end.record()
+torch.cuda.synchronize()
+elapsed_time = start.elapsed_time(end)
+flops_g = flops / 1e9  # to GFLOPs
+params_m = params / 1e6  # to MParams
+speed_s = elapsed_time / 1000  # to Second
+print(f'GFLOPs: {flops_g:.2f}, MParams: {params_m:.2f}, Speed: {speed_s:.3f}s')
+```
+
 ## Acknowledgement
 
 Our code is based on the following:
