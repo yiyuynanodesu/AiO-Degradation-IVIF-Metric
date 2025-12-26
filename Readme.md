@@ -74,13 +74,13 @@ class Network(nn.Module):
         super().__init__()
         self.model = model
         self.model_pretrain = model_pretrain
-    def forward(self, img_vis, img_ir, text=None):
-        if model_pretrain != None:
+    def forward(self, a, b, text=None):
+        if self.model_pretrain != None:
             ### use your pretrain model to do sth
-        
+            pass
         ### real model fusion
-        output = self.model(vi,ir) 
-        return fusion_image
+        output = self.model(a,b) 
+        return output
 
 net = Network(your_real_model)
 # Create ir, vi input tensor
@@ -89,7 +89,8 @@ start = torch.cuda.Event(enable_timing=True)
 end = torch.cuda.Event(enable_timing=True)
 torch.cuda.synchronize()
 #### model fusion ####
-flops, params = profile(net, inputs=(vi, ir))
+flops, _ = profile(net, inputs=(vi, ir))
+total = sum([params.nelement() for params in model.parameters()])
 #### model fusion ####
 start.record()
 output = net(vi, ir)
@@ -97,7 +98,7 @@ end.record()
 torch.cuda.synchronize()
 elapsed_time = start.elapsed_time(end)
 flops_g = flops / 1e9  # to GFLOPs
-params_m = params / 1e6  # to MParams
+params_m = total / 1e6  # to MParams
 speed_s = elapsed_time / 1000  # to Second
 print(f'GFLOPs: {flops_g:.2f}, MParams: {params_m:.2f}, Speed: {speed_s:.3f}s')
 ```
