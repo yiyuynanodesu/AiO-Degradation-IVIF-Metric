@@ -90,7 +90,7 @@ end = torch.cuda.Event(enable_timing=True)
 torch.cuda.synchronize()
 #### model fusion ####
 flops, _ = profile(net, inputs=(vi, ir))
-total = sum([params.nelement() for params in model.parameters()])
+total = sum([params.nelement() for params in net.parameters()])
 #### model fusion ####
 start.record()
 output = net(vi, ir)
