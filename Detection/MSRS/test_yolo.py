@@ -27,12 +27,12 @@ def write_excel(excel_name='detection.xlsx', worksheet_name='VIF', column_index=
 
     workbook.save(excel_name)
 
-# image_path = './dataset/MSRS/detection/images'
-image_path = './dataset/LLVIP/images'
+image_path = './dataset/MSRS/detection/images'
+# image_path = './dataset/LLVIP/images'
 Method = 'model'
 model = YOLO("yolov8n.pt")
 
-metrics = model.val(data="yolo.yaml",plots=False,classes=[0,1,2])
+metrics = model.val(data="yolo.yaml",plots=False,classes=[0,1,2],name=Method)
 
 P, R, mAP50, mAP5095 = metrics.results_dict['metrics/precision(B)'], metrics.results_dict['metrics/recall(B)'], metrics.results_dict['metrics/mAP50(B)'], metrics.results_dict['metrics/mAP50-95(B)']
 mAP75 = metrics.box.map75
@@ -45,4 +45,4 @@ value_list = [Method, P, R, mAP50, mAP75, mAP5095]
 write_excel(Method + '_detection.xlsx', 'Detection', 0, metric_list)
 write_excel(Method + '_detection.xlsx', 'Detection', 1, value_list)
 
-model.predict(image_path,save=True,classes=[0,1,2])
+model.predict(image_path,save=True,classes=[0,1,2],name=Method)
