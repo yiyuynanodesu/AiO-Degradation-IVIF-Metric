@@ -3,6 +3,7 @@
 
 import numpy as np 
 from PIL import Image 
+import os
 
 # MFNet
 # def get_palette():
@@ -18,7 +19,7 @@ from PIL import Image
 #     palette    = np.array([unlabelled,car, person, bike, curve, car_stop, guardrail, color_cone, bump])
 #     return palette
 
-def visualize(pth,image_name, predictions):
+def visualize(save_path, image_name, predictions):
     palette    = np.array([(0, 0, 0), (173, 229, 229), (187, 57, 134), (45, 163, 178), (206, 176, 47), (131, 54, 200), (56, 171, 83), (183, 71, 78), (66, 102, 167), (14, 127, 255), (138, 163, 91), (156, 98, 153), (101, 153, 140), (225, 214, 155), (136, 111, 89)])
     for (i, pred) in enumerate(predictions):
         pred = predictions[i].cpu().numpy()
@@ -26,7 +27,7 @@ def visualize(pth,image_name, predictions):
         for cid in range(0, len(palette)): # fix the mistake from the MFNet code on Dec.27, 2019
             img[pred == cid] = palette[cid]
         img = Image.fromarray(np.uint8(img))
-        img.save(pth+ image_name[i])
+        img.save(os.path.join(save_path, image_name[i]))
 
 def compute_results(conf_total):
     n_class =  conf_total.shape[0]

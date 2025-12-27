@@ -78,6 +78,7 @@ def val_segformer2(args, model, class_text):
     )
     test_loader.n_iter = len(test_loader)
     print("Im working (^w^)")
+    image_name_list, predictions = [], []
     with torch.no_grad():
         for it, (images_result,label,name) in enumerate(test_loader):
             images_result = Variable(images_result)
@@ -87,6 +88,9 @@ def val_segformer2(args, model, class_text):
             logits,_, seg1, = model.forward(images_result)
             seg1 = F.interpolate(seg1, size=label.shape[1:], mode='bilinear', align_corners=False)
 
+            image_name_list.append(name[0])
+            predictions.append(seg1.argmax(1).squeeze())
+ 
             label = label.cpu().numpy().squeeze().flatten()
             prediction = seg1.argmax(
                 1).cpu().numpy().squeeze().flatten() 
@@ -106,6 +110,11 @@ def val_segformer2(args, model, class_text):
         print("* average values (np.mean(np.nan_to_num(x))): \n ACC: %.6f, iou: %.6f" \
               % (np.mean(np.nan_to_num(precision_per_class)), np.mean(np.nan_to_num(iou_per_class))))
 
+        # 可视化
+        image_save_path = os.path.join(args.save_path, args.model_name)
+        os.makedirs(image_save_path, exist_ok=True)
+        visualize(image_save_path, image_name_list, predictions)
+        
         # 写入excel
         sheet_list = ['precision', 'recall', 'iou']
         value_dict = {
@@ -144,8 +153,9 @@ if __name__ == '__main__':
     parser.add_argument('--num_workers', '-J', type=int, default=8)
     parser.add_argument('--result_path', '-R', type=str, default='')
     parser.add_argument('--label_path', '-L', type=str, default='')
-    parser.add_argument('--save_path', '-S', type=str, default='./')
+    parser.add_argument('--save_path', '-S', type=str, default='./Result')
     args = parser.parse_args()
+    os.makedirs(args.save_path, exist_ok=True)
     save_name = f'{args.model_name}_segmentation.xlsx'
     args.metric_save_name = os.path.join(args.save_path, save_name)
     class_text = ['background', 'road', 'sidewalk', 'building', 'lamp', 'sign', 'vegetation', 'sky', 'person', 'car', 'truck', 'bus', 'motocycle', 'bicycle', 'pole']
