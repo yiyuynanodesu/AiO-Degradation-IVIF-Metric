@@ -49,7 +49,7 @@ else:
 or
 
 ```python
-python metric_template.py
+python metric_template.py --dataset "xxxx" --model "xxxx" --result_path "xxxx" --vi_path "xxxx" --ir_path "xxxx"
 ```
 
 ## Warning List
