@@ -2,6 +2,155 @@ import shutil
 import os
 import random
 
+def make_metric_dataset_ver1():
+
+    from_path = './DDL-12/'
+    to_path = './Dataset/train/'
+    save_ext = 'png'
+
+    example_path = './DDL-12/VI_Haze/VI_Haze_average/train/Visible_gt'
+    have_move = 0
+    filename_list = os.listdir(example_path)
+    num_to_select = 100
+    selected_indices = random.sample(range(len(filename_list)), num_to_select)
+
+    for degrad in os.listdir(from_path):
+        degrad_path = os.path.join(from_path, degrad)
+        target_ext = 'png'
+        if degrad == 'VI_Low_light':
+            target_ext = 'jpg'
+        
+        if have_move == 0:
+            # 移动 红外光
+            for index in selected_indices:
+                filename = filename_list[index]
+                basefilename = filename.split('.')[0]
+                now_degrad = degrad.split('_')[-1]
+                image_path = os.path.join(degrad_path, f'{degrad}_slight', 'train', f'Infrared_gt')
+
+                target_filename_list = os.listdir(image_path)
+                target_ext = target_filename_list[0].split('.')[-1]
+                target_filename = basefilename + '.' + target_ext
+                
+                save_path = os.path.join(to_path, 'Infrared')
+                shutil.copy(os.path.join(image_path, target_filename), os.path.join(save_path, filename))
+        
+            # 移动 可见光gt
+            for index in selected_indices:
+                filename = filename_list[index]
+                basefilename = filename.split('.')[0]
+                now_degrad = degrad.split('_')[-1]
+                image_path = os.path.join(degrad_path, f'{degrad}_slight', 'train', f'Visible_gt')
+
+                target_filename_list = os.listdir(image_path)
+                target_ext = target_filename_list[0].split('.')[-1]
+                target_filename = basefilename + '.' + target_ext
+                
+                save_path = os.path.join(to_path, 'Visible_gt')
+                shutil.copy(os.path.join(image_path, target_filename), os.path.join(save_path, filename))
+            have_move = 1
+
+        # 构造 可见光(gt slight moderate average)
+        level_list = ['gt', 'slight', 'moderate', 'average']
+        for index in selected_indices:
+            filename = filename_list[index]
+            basefilename = filename.split('.')[0]
+            now_degrad = degrad.split('_')[-1]
+            for level in level_list:
+                if level == 'gt':
+                    image_path = os.path.join(degrad_path, f'{degrad}_slight', 'train', f'Visible_gt')
+                else:
+                    image_path = os.path.join(degrad_path, f'{degrad}_{level}', 'train', 'Visible')
+
+                target_filename_list = os.listdir(image_path)
+                target_ext = target_filename_list[0].split('.')[-1]
+                target_filename = basefilename + '.' + target_ext
+
+                new_filename = basefilename + '_' + now_degrad + '_' + level + '.' + save_ext
+                save_path = os.path.join(to_path, 'Visible')
+                shutil.copy(os.path.join(image_path, target_filename), os.path.join(save_path, new_filename))
+
+        # 构造 可见光_higher(slight moderate average extreme)
+        level_list = ['slight', 'moderate', 'average', 'extreme']
+        for index in selected_indices:
+            filename = filename_list[index]
+            basefilename = filename.split('.')[0]
+            target_filename = basefilename + '.' + target_ext
+            now_degrad = degrad.split('_')[-1]
+            for level in level_list:
+                image_path = os.path.join(degrad_path, f'{degrad}_{level}', 'train', 'Visible')
+
+                target_filename_list = os.listdir(image_path)
+                target_ext = target_filename_list[0].split('.')[-1]
+                target_filename = basefilename + '.' + target_ext
+                
+                new_filename = basefilename + '_' + now_degrad + '_' + level + '.' + save_ext
+                save_path = os.path.join(to_path, 'Visible_higher')
+                shutil.copy(os.path.join(image_path, target_filename), os.path.join(save_path, new_filename))
+
+    print('done')
+
+def make_metric_dataset_ver2():
+    from_path = './DDL-12/'
+    to_ir_path = './DDLContrastive/train/Infrared'
+    to_vi_path = './DDLContrastive/train/Visible'
+    to_vi_gt_path = './DDLContrastive/train/Visible_gt'
+    to_vi_level_path = './DDLContrastive/train/Visible_level'
+    save_ext = 'png'
+
+    example_path = './DDL-12/VI_Haze/VI_Haze_average/train/Visible_gt'
+    have_move = []
+    filename_list = os.listdir(example_path)
+    degrad_list = ['VI_Haze', 'VI_Low_light', 'VI_Over_exposure', 'VI_Rain']
+    level_list = ['slight', 'moderate', 'average', 'extreme']
+
+    run_time = 1600
+    for _ in range(run_time):
+        degrad = random.choice(degrad_list)
+        now_degrad = degrad.split('_')[-1]
+        level = random.choice(level_list)
+        filename = random.choice(filename_list)
+        basefilename = filename.split('.')[0]
+        baseext = 'png'
+        if degrad == 'VI_Low_light':
+            baseext = 'jpg'
+        if degrad == 'VI_Over_exposure':
+            baseext = 'jpg'
+            
+        ir_filename = filename
+        vis_filename = basefilename + '.' + baseext
+        vis_gt_filename = filename
+        new_filename = basefilename + '_' + now_degrad + '_' + level + '.png'
+        if new_filename in have_move:
+            run_time = run_time + 1
+            continue
+        else:
+            have_move.append(new_filename)
+        from_ir_path = os.path.join(from_path, degrad, f'{degrad}_{level}', 'train', 'Infrared', ir_filename)
+        from_vis_path = os.path.join(from_path, degrad, f'{degrad}_{level}', 'train', 'Visible', vis_filename)
+        from_vis_gt_path = os.path.join(from_path, degrad, f'{degrad}_{level}', 'train', 'Visible_gt', vis_gt_filename)
+        shutil.copy(from_ir_path, os.path.join(to_ir_path, new_filename))
+        shutil.copy(from_vis_path, os.path.join(to_vi_path, new_filename))
+        shutil.copy(from_vis_gt_path, os.path.join(to_vi_gt_path, new_filename))
+
+        degrad_path = os.path.join(from_path, degrad)
+        each_level_list = ['gt', 'slight', 'moderate', 'average', 'extreme']
+        for each_level in each_level_list:
+            level_path = os.path.join(degrad_path, each_level)
+            if each_level == 'gt':
+                image_path = os.path.join(degrad_path, f'{degrad}_slight', 'train', f'Visible_gt')
+            else:
+                image_path = os.path.join(degrad_path, f'{degrad}_{each_level}', 'train', 'Visible')
+
+            target_filename_list = os.listdir(image_path)
+            target_ext = target_filename_list[0].split('.')[-1]
+            target_filename = basefilename + '.' + target_ext
+
+            new_filename_level = basefilename + '_' + now_degrad + '_' + each_level + '.' + save_ext
+            shutil.copy(os.path.join(image_path, target_filename), os.path.join(to_vi_level_path, new_filename_level))
+            
+    print('done')
+
 def move_data():
     from_path = './DDL-12/'
     to_path = './Dataset/'
