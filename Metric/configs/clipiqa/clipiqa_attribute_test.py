@@ -13,13 +13,17 @@ model = dict(
         # ]),
 
         # test degradation attributes
+        # classnames=[
+        #     ['Good photo.', 'Bad photo.'],
+        #     ['Bright photo.', 'Dark photo.'],
+        #     ['Sharp photo.', 'Blurry photo.'],
+        #     ['Clean photo.', 'Noisy photo.'],
+        #     ['Colorful photo.', 'Dull photo.'],
+        #     ['High contrast photo.', 'Low contrast photo.'],
+        # ]),
+
         classnames=[
-            ['Good photo.', 'Bad photo.'],
-            ['Bright photo.', 'Dark photo.'],
-            ['Sharp photo.', 'Blurry photo.'],
-            ['Clean photo.', 'Noisy photo.'],
-            ['Colorful photo.', 'Dull photo.'],
-            ['High contrast photo.', 'Low contrast photo.'],
+            ['a clear image with detailed background and salient objects', 'an unclear image with minimal details and in-distinct objects'],
         ]),
 
         # test AVA attributes
