@@ -56,7 +56,7 @@ class CustomDataset(Dataset):
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    class_text = ['HazeRain', 'HazeLow', 'Rain', 'Haze', 'LowLight', 'Exposure']
+    class_text = ['HazeRain', 'HazeLow', 'Rain', 'Haze', 'Exposure', 'LowLight']
     adapter_weight = './pretrained_weights/one.pth'
     vis_path = '../dataset/Light_DDL-12/train/Visible'
     n_components = 2
