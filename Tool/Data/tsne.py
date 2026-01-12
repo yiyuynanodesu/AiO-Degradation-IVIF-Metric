@@ -5,7 +5,8 @@ import torch.nn as nn
 from torchvision import datasets, transforms
 from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
-from model.Adapter_one import Adapter as one
+
+from model.SPGFusion import SPGFusion
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 import os
@@ -18,6 +19,27 @@ def set_seed(seed=42):
     np.random.seed(seed)
 
 set_seed(seed=721)
+
+class CustomDataset(Dataset):
+    def __init__(self, vis_path, ir_path):
+        super().__init__()
+        self.vis_path = vis_path
+        self.ir_path = ir_path
+        self.filename_path = os.listdir(vis_path)
+        self.to_tensor = transforms.ToTensor()
+
+    def __len__(self):
+        return len(self.filename_path)
+
+    def __getitem__(self, idx):
+        vis_filename = self.filename_path[idx]
+        ir_filename = vis_filename
+        vis_image = Image.open(os.path.join(self.vis_path, vis_filename))
+        ir_image = Image.open(os.path.join(self.ir_path, ir_filename))
+        vis_image = self.to_tensor(vis_image)
+        ir_image = self.to_tensor(ir_image)
+        label = get_label(vis_filename)
+        return vis_image, ir_image, label
 
 def get_label(file):
     if "Haze" in file and "Rain" in file:
@@ -33,41 +55,25 @@ def get_label(file):
     if "light" in file:
         return 5
 
-class CustomDataset(Dataset):
-    def __init__(self, vis_path):
-        super().__init__()
-        self.vis_path = vis_path
-        self.filename_path = os.listdir(vis_path)
-        self.process = transforms.Compose([
-            transforms.Resize((224,224)),
-            transforms.ToTensor()
-        ])
-
-    def __len__(self):
-        return len(self.filename_path)
-
-    def __getitem__(self, idx):
-        filename = self.filename_path[idx]
-        image_path = os.path.join(self.vis_path, filename)
-        img = Image.open(image_path)
-        img = self.process(img)
-        label = get_label(filename)
-        return img, label
-
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     class_text = ['HazeRain', 'HazeLow', 'Rain', 'Haze', 'Exposure', 'LowLight']
-    adapter_weight = './pretrained_weights/one.pth'
-    vis_path = '../dataset/Light_DDL-12/train/Visible'
+    vis_path = '../dataset/LightDDL/train/Visible'
+    ir_path = '../dataset/LightDDL/train/Infrared'
     n_components = 2
     perplexity = 50
     save_path = 'tsne_visualization.png'
     
-    cls_model = one()
-    cls_model.load_state_dict(torch.load(adapter_weight), strict=False)
-    cls_model.to(device)
-    cls_model.eval()
-    dataset = CustomDataset(vis_path)
+    fusionNet = SPGFusion().to(device)
+    fusion_weights = 'savePTH/epoch117/best_model.pth'
+    ckpt = torch.load(fusion_weights, map_location='cpu')
+    sd = ckpt['model'] if isinstance(ckpt, dict) and 'model' in ckpt else ckpt
+    missing, unexpected = fusionNet.load_state_dict(sd, strict=False)
+    print('[LOAD] missing:', len(missing))
+    print('[LOAD] unexpected:', len(unexpected))
+    fusionNet.load_state_dict(sd, strict=True)
+    
+    dataset = CustomDataset(vis_path, ir_path)
     data_loader = DataLoader(dataset, shuffle=False, batch_size=1)
 
     # extract feature
@@ -75,11 +81,11 @@ if __name__ == "__main__":
     labels = []
     
     with torch.no_grad():
-        for data, target in data_loader:
-            data, target = data.to(device), target.to(device)
-            feature = cls_model(data)
+        for vis_image, ir_image, label in data_loader:
+            vis_image, ir_image, label = vis_image.to(device), ir_image.to(device), label.to(device)
+            feature = fusionNet(vis_image,ir_image)
             features.append(feature.cpu().numpy())
-            labels.append(target.cpu().numpy())
+            labels.append(label.cpu().numpy())
             
     features = np.concatenate(features, axis=0)
     labels = np.concatenate(labels, axis=0)
