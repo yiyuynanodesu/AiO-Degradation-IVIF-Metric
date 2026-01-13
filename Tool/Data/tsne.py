@@ -72,7 +72,8 @@ if __name__ == "__main__":
     print('[LOAD] missing:', len(missing))
     print('[LOAD] unexpected:', len(unexpected))
     fusionNet.load_state_dict(sd, strict=True)
-    
+    fusionNet.eval()
+
     dataset = CustomDataset(vis_path, ir_path)
     data_loader = DataLoader(dataset, shuffle=False, batch_size=1)
 
