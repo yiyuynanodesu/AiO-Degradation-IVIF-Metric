@@ -8,7 +8,7 @@ import warnings
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 
-from demo.clipiqa_single_image_demo import evaluate_image 
+from CLIPIQA.demo.clipiqa_single_image_demo import evaluate_image 
 
 warnings.filterwarnings("ignore")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
