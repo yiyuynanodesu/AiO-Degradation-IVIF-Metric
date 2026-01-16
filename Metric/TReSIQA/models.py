@@ -14,9 +14,8 @@ import copy
 import json
 from typing import Optional, List
 
-import data_loader
-from transformers import Transformer
-from posencode import PositionEmbeddingSine
+from TReSIQA.transformers import Transformer
+from TReSIQA.posencode import PositionEmbeddingSine
 
 
 class L2pooling(nn.Module):
@@ -51,12 +50,12 @@ class Net(nn.Module):
 
 			
 		if cfg.network =='resnet50':
-			from resnet_modify  import resnet50 as resnet_modifyresnet
+			from TReSIQA.resnet_modify  import resnet50 as resnet_modifyresnet
 			dim_modelt = 3840
 			modelpretrain = models.resnet50(pretrained=True)
 
 		elif cfg.network =='resnet34':
-			from resnet_modify  import resnet34 as resnet_modifyresnet
+			from TReSIQA.resnet_modify  import resnet34 as resnet_modifyresnet
 			modelpretrain = models.resnet34(pretrained=True)
 			dim_modelt = 960
 			self.L2pooling_l1 = L2pooling(channels=64)
@@ -64,7 +63,7 @@ class Net(nn.Module):
 			self.L2pooling_l3 = L2pooling(channels=256)
 			self.L2pooling_l4 = L2pooling(channels=512)
 		elif cfg.network == 'resnet18':
-			from resnet_modify  import resnet18 as resnet_modifyresnet
+			from TReSIQA.resnet_modify  import resnet18 as resnet_modifyresnet
 			modelpretrain = models.resnet18(pretrained=True)
 			dim_modelt = 960
 			self.L2pooling_l1 = L2pooling(channels=64)
@@ -169,7 +168,7 @@ class TReS(object):
         super(TReS, self).__init__()
         
         self.net = Net(config,device).to(device)    
-        self.net.load_state_dict(torch.load('./bestmodel_{}_{}'.format(str(config.vesion),str(config.seed))))
+        self.net.load_state_dict(torch.load('./bestmodel_{}_{}'.format(str(config.version),str(config.seed))))
         self.net.eval()
         self.config = config
 

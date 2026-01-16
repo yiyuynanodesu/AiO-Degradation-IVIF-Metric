@@ -15,7 +15,7 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.offline as pyo
 
-config = 'configs/clipiqa/clipiqa_attribute_test.py'
+config = 'CLIPIQA/configs/clipiqa/clipiqa_attribute_test.py'
 checkpoint = None
 device = 0
 

@@ -14,7 +14,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn, Tensor
 
-from posencode import PositionEmbeddingSine
+from TReSIQA.posencode import PositionEmbeddingSine
 
 
 class Transformer(nn.Module):

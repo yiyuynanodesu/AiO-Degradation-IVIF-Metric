@@ -22,7 +22,7 @@ from evaluate.degrad_eval_metric_by_type import eval_batch as degrad_type_eval
 
 import os
 import argparse
-# python metric_template.py --model "Init_All_wo_film_SPGFusion" --dataset "DDL" --result_path "../SPGFusion/OUTPUT/Time_test3"
+
 parser = argparse.ArgumentParser(description='PyTorch Training Example')
 parser.add_argument('--model', default = '', help='model')
 parser.add_argument('--dataset', default = '', help='dataset')
@@ -105,7 +105,7 @@ print(f'GFLOPs: {flops_g:.2f}, MParams: {params_m:.2f}, Speed: {speed_s:.3f}s')
 
 ## Acknowledgement
 
-Our code is based on the following:
+Our code is based on the following excellent work:
 
 [LLVIP: A Visible-infrared Paired Dataset for Low-light Vision](https://github.com/bupt-ai-cz/LLVIP)
 
@@ -113,3 +113,8 @@ Our code is based on the following:
 
 [RollingPlain/IVIF_ZOO: Infrared and Visible Image Fusion: From Data Compatibility to Task Adaption. A fire-new survey for infrared and visible image fusion.](https://github.com/RollingPlain/IVIF_ZOO)
 
+[No-Reference Image Quality Assessment via Transformers, Relative Ranking, and Self-Consistency (WACV 2022) ](https://github.com/isalirezag/TReS)
+
+[Multi-interactive Feature Learning and a Full-time Multi-modality Benchmark for Image Fusion and Segmentation](https://github.com/JinyuanLiu-CV/SegMiF)
+
+[DeepSeek(mainly contributor for Tool)](https://www.deepseek.com/)
