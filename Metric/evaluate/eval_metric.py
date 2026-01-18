@@ -229,65 +229,65 @@ def eval_batch(ir_path, vis_path, output_path, save_dir, model_name='Model', exc
     write_excel(metric_save_name, "SSIM", 0, filename_list)
     write_excel(metric_save_name, "MS_SSIM", 0, filename_list)
 
-    write_excel(metric_save_name, 'CE', i + 1,
+    write_excel(metric_save_name, 'CE', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in CE_list])
-    write_excel(metric_save_name, 'NMI', i + 1,
+    write_excel(metric_save_name, 'NMI', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in NMI_list])
-    write_excel(metric_save_name, 'QNCIE', i + 1,
+    write_excel(metric_save_name, 'QNCIE', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in QNCIE_list])
-    write_excel(metric_save_name, 'TE', i + 1,
+    write_excel(metric_save_name, 'TE', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in TE_list])
-    write_excel(metric_save_name, 'EI', i + 1,
+    write_excel(metric_save_name, 'EI', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in EI_list])
-    write_excel(metric_save_name, 'Qy', i + 1,
+    write_excel(metric_save_name, 'Qy', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in Qy_list])
-    write_excel(metric_save_name, 'Qcb', i + 1,
+    write_excel(metric_save_name, 'Qcb', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in Qcb_list])
-    write_excel(metric_save_name, 'EN', i + 1,
+    write_excel(metric_save_name, 'EN', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in EN_list])
-    write_excel(metric_save_name, 'MI', i + 1,
+    write_excel(metric_save_name, 'MI', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in MI_list])
-    write_excel(metric_save_name, 'SF', i + 1,
+    write_excel(metric_save_name, 'SF', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in SF_list])
-    write_excel(metric_save_name, 'AG', i + 1,
+    write_excel(metric_save_name, 'AG', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in AG_list])
-    write_excel(metric_save_name, 'SD', i + 1,
+    write_excel(metric_save_name, 'SD', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in SD_list])
-    write_excel(metric_save_name, 'CC', i + 1,
+    write_excel(metric_save_name, 'CC', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in CC_list])
-    write_excel(metric_save_name, 'SCD', i + 1,
+    write_excel(metric_save_name, 'SCD', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in SCD_list])
-    write_excel(metric_save_name, 'VIF', i + 1,
+    write_excel(metric_save_name, 'VIF', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in VIF_list])
-    write_excel(metric_save_name, 'MSE', i + 1,
+    write_excel(metric_save_name, 'MSE', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in MSE_list])
-    write_excel(metric_save_name, 'PSNR', i + 1,
+    write_excel(metric_save_name, 'PSNR', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in PSNR_list])
-    write_excel(metric_save_name, 'Qabf', i + 1, Qabf_list)
-    write_excel(metric_save_name, 'Nabf', i + 1,
+    write_excel(metric_save_name, 'Qabf', 1, Qabf_list)
+    write_excel(metric_save_name, 'Nabf', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in Nabf_list])
-    write_excel(metric_save_name, 'SSIM', i + 1,
+    write_excel(metric_save_name, 'SSIM', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in SSIM_list])
-    write_excel(metric_save_name, 'MS_SSIM', i + 1,
+    write_excel(metric_save_name, 'MS_SSIM', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in MS_SSIM_list])
     print('Done')
