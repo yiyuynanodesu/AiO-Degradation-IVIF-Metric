@@ -10,6 +10,7 @@ from openpyxl.utils import get_column_letter
 
 from CLIPIQA.demo.clipiqa_single_image_demo import evaluate_image as CLIPIQA_eval
 from TReSIQA.testing import evaluate_image as TReS_eval
+from MUSIQ.inference import evaluate_image as MUSIQ_eval
 
 warnings.filterwarnings("ignore")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -44,8 +45,9 @@ def evaluation_one(f_name):
     AG = AG_function(f_img_tensor)
     CLIPIQA = CLIPIQA_eval(f_name)
     TReS = TReS_eval(f_name)
+    MUSIQ = MUSIQ_eval(f_name)
 
-    return EI, EN, SF, SD, AG, CLIPIQA, TReS
+    return EI, EN, SF, SD, AG, CLIPIQA, TReS, MUSIQ
 
 def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','Haze','Exposure','Light'], model_name='Model', excel_filename='metric.xlsx'):
     Method = model_name
@@ -57,6 +59,8 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
     SD_list = []
     CLIPIQA_list = []
     TReS_list = []
+    MUSIQ_list = []
+    
     filename_list = []
     for _ in range(len(degard_list)):
         EI_list.append([])
@@ -66,6 +70,7 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
         SD_list.append([])
         CLIPIQA_list.append([])
         TReS_list.append([])
+        MUSIQ_list.append([])
         filename_list.append([])
     
     
@@ -114,7 +119,7 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
 
         if degard_type == None:
             print(f'!!! pay attention {f_name} can not classify!!!')
-        EI, EN, SF, SD, AG, CLIPIQA, TReS = evaluation_one(f_name)
+        EI, EN, SF, SD, AG, CLIPIQA, TReS, MUSIQ = evaluation_one(f_name)
         EI_list[degard_type].append(EI)
         EN_list[degard_type].append(EN)
         SF_list[degard_type].append(SF)
@@ -122,6 +127,7 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
         SD_list[degard_type].append(SD)
         CLIPIQA_list[degard_type].append(CLIPIQA)
         TReS_list[degard_type].append(TReS)
+        MUSIQ_list[degard_type].append(MUSIQ)
         filename_list[degard_type].append(output_filename)
         eval_bar.set_description("{} | {} | ".format(Method, output_filename, {degard_list[degard_type]}))
 
@@ -140,6 +146,8 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
         CLIPIQA_list[idx].append(CLIPIQA_tensor)
         TReS_tensor = torch.tensor(TReS_list[idx]).mean().item()
         TReS_list[idx].append(TReS_tensor)
+        MUSIQ_tensor = torch.tensor(MUSIQ_list[idx]).mean().item()
+        MUSIQ_list[idx].append(MUSIQ_tensor)
         filename_list[idx].append('mean')
 
         filename_list[idx].insert(0, '')
@@ -150,6 +158,7 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
         SD_list[idx].insert(0, 'SD')
         CLIPIQA_list[idx].insert(0,'CLIPIQA')
         TReS_list[idx].insert(0,'TReS')
+        MUSIQ_list[idx].insert(0,'MUSIQ')
 
     for idx in range(len(degard_list)):
         write_excel(metric_save_name, degard_list[idx], 0, filename_list[idx])
@@ -167,4 +176,6 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
              in CLIPIQA_list[idx]])
         write_excel(metric_save_name, degard_list[idx], 7, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
              in TReS_list[idx]])
+        write_excel(metric_save_name, degard_list[idx], 7, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+             in MUSIQ_list[idx]])
     print('Done (❁´◡`❁)')

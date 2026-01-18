@@ -10,6 +10,7 @@ from openpyxl.utils import get_column_letter
 
 from CLIPIQA.demo.clipiqa_single_image_demo import evaluate_image as CLIPIQA_eval
 from TReSIQA.testing import evaluate_image as TReS_eval
+from MUSIQ.inference import evaluate_image as MUSIQ_eval
 
 warnings.filterwarnings("ignore")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -43,8 +44,9 @@ def evaluation_one(f_name):
     AG = AG_function(f_img_tensor)
     CLIPIQA = CLIPIQA_eval(f_name)
     TReS = TReS_eval(f_name)
+    MUSIQ = MUSIQ_eval(f_name)
 
-    return EI, EN, SF, SD, AG, CLIPIQA, TReS
+    return EI, EN, SF, SD, AG, CLIPIQA, TReS, MUSIQ
 
 def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric.xlsx'):
     Method = model_name
@@ -57,6 +59,7 @@ def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric
     SD_list = []
     CLIPIQA_list = []
     TReS_list = []
+    MUSIQ_list = []
     
     filename_list = ['']
     output_fileList = os.listdir(output_path)
@@ -64,7 +67,7 @@ def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric
     for _, output_filename in enumerate(eval_bar):
         f_name = os.path.join(output_path, output_filename)
         
-        EI, EN, SF, SD, AG, CLIPIQA, TReS = evaluation_one(f_name)
+        EI, EN, SF, SD, AG, CLIPIQA, TReS, MUSIQ = evaluation_one(f_name)
         EI_list.append(EI)
         EN_list.append(EN)
         SF_list.append(SF)
@@ -72,6 +75,7 @@ def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric
         SD_list.append(SD)
         CLIPIQA_list.append(CLIPIQA)
         TReS_list.append(TReS)
+        MUSIQ_list.append(MUSIQ)
         filename_list.append(output_filename)
         eval_bar.set_description("{} | {}".format(Method, output_filename))
 
@@ -89,6 +93,8 @@ def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric
     CLIPIQA_list.append(CLIPIQA_tensor)
     TReS_tensor = torch.tensor(TReS_list).mean().item()
     TReS_list.append(TReS_tensor)
+    MUSIQ_tensor = torch.tensor(MUSIQ_list).mean().item()
+    MUSIQ_list.append(MUSIQ_tensor)
     filename_list.append('mean')
 
 
@@ -99,6 +105,7 @@ def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric
     SD_list.insert(0, '{}'.format(Method))
     CLIPIQA_list.insert(0, '{}'.format(Method))
     TReS_list.insert(0, '{}'.format(Method))
+    MUSIQ_list.insert(0, '{}'.format(Method))
 
 
     write_excel(metric_save_name, 'EI', 0, filename_list)
@@ -108,6 +115,7 @@ def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric
     write_excel(metric_save_name, "SD", 0, filename_list)
     write_excel(metric_save_name, "CLIPIQA", 0, filename_list)
     write_excel(metric_save_name, "TReS", 0, filename_list)
+    write_excel(metric_save_name, "MUSIQ", 0, filename_list)
 
     write_excel(metric_save_name, 'EI', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
@@ -133,4 +141,7 @@ def eval_batch(output_path, save_dir, model_name='Model', excel_filename='metric
     write_excel(metric_save_name, 'TReS', 1,
                 [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
                  in TReS_list])
+    write_excel(metric_save_name, 'MUSIQ', 1,
+                [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+                 in MUSIQ_list])
     print('Done ╰(*°▽°*)╯')
