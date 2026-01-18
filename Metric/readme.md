@@ -13,5 +13,6 @@ mim install mmcv-full==1.5.0
 git clone git@github.com:IceClear/CLIP-IQA.git
 cd CLIP-IQA
 pip install -r requirements.txt
-pip install -e .
+# this step install mmedit but we have installed
+# pip install -e . 
 ```
