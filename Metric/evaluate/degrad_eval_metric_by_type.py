@@ -176,6 +176,6 @@ def eval_batch(output_path, save_dir, degard_list=['HazeRain','HazeLow','Rain','
              in CLIPIQA_list[idx]])
         write_excel(metric_save_name, degard_list[idx], 7, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
              in TReS_list[idx]])
-        write_excel(metric_save_name, degard_list[idx], 7, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
+        write_excel(metric_save_name, degard_list[idx], 8, [x.item() if isinstance(x, torch.Tensor) else float(x) if isinstance(x, (int, float)) else x for x
              in MUSIQ_list[idx]])
     print('Done (❁´◡`❁)')
